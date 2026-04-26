@@ -39,7 +39,7 @@ A full-stack web application for a dermatology clinic featuring AI-powered skin 
 
 New users create an account by entering their personal details and selecting their role. Once registered, they are redirected to the appropriate dashboard.
 
-![User Registration]<img width="1066" height="858" alt="image" src="https://github.com/user-attachments/assets/3043c6d1-7ff6-4790-b01c-ed1e8afb7e6f" />
+[User Registration]<img width="1066" height="858" alt="image" src="https://github.com/user-attachments/assets/3043c6d1-7ff6-4790-b01c-ed1e8afb7e6f" />
 
 ---
 
@@ -47,7 +47,9 @@ New users create an account by entering their personal details and selecting the
 
 Registered users log in with their email and password. The system reads their role from the token and routes them to their correct dashboard automatically.
 
-![User Login](screenshots/login.png)
+[User Login]
+<img width="1050" height="859" alt="image" src="https://github.com/user-attachments/assets/7dbc356f-6f07-485d-af69-8be6456f9577" />
+
 
 ---
 
@@ -57,7 +59,9 @@ Registered users log in with their email and password. The system reads their ro
 
 The patient's home screen. Displays a summary of AI analyses, upcoming appointments, active treatments, and loyalty points — all in one view.
 
-![Patient Dashboard](screenshots/patient-dashboard.png)
+[Patient Dashboard]
+<img width="999" height="862" alt="image" src="https://github.com/user-attachments/assets/80b0ce46-f192-45d2-a9d5-fe24227d82b5" />
+
 
 ---
 
