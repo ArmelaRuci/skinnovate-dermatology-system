@@ -1,0 +1,103 @@
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 24px;
+  align-items: flex-start;
+}
+@media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+
+/* Dropzone */
+.dropzone {
+  border: 2px dashed var(--border-light);
+  border-radius: var(--radius-md);
+  cursor: pointer; overflow: hidden;
+  transition: border-color 0.2s, background 0.2s;
+  margin-bottom: 16px;
+  min-height: 200px;
+  display: flex; align-items: center; justify-content: center;
+}
+.dropzone:hover { border-color: var(--teal); background: var(--teal-dim); }
+.dropActive     { border-color: var(--teal) !important; background: var(--teal-dim) !important; }
+.dropHasFile    { border-color: var(--teal); border-style: solid; }
+.dropPlaceholder { text-align: center; padding: 40px 24px; }
+.dropPlaceholder p    { color: var(--text-secondary); margin: 12px 0 4px; font-weight: 500; }
+.dropPlaceholder span { font-size: 0.78rem; color: var(--text-muted); }
+.preview { width: 100%; max-height: 340px; object-fit: cover; }
+
+.metaFields { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.metaInput {
+  background: var(--surface-2); border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm); padding: 9px 13px;
+  color: var(--text-primary); font-size: 0.88rem; font-family: var(--font-body);
+}
+.metaInput:focus { outline: none; border-color: var(--teal); }
+.metaInput::placeholder { color: var(--text-muted); }
+
+.uploadActions { display: flex; flex-direction: column; gap: 8px; }
+.resultCard    { margin-top: 16px; }
+
+/* Result */
+.resultWrap { display: flex; flex-direction: column; gap: 16px; }
+.resultHeader {
+  display: flex; align-items: center; gap: 14px;
+  flex-wrap: wrap;
+}
+.resultIcon { flex-shrink: 0; }
+.conditionBig { font-size: 1.4rem; font-family: var(--font-heading); color: var(--cream); }
+.resultSub    { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+.severityPill { margin-left: auto; }
+
+/* Confidence bar */
+.confBarWrap  { }
+.confBarLabel { display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--text-muted); margin-bottom: 6px; font-weight: 500; }
+.confBarBg    { height: 6px; background: var(--surface-3); border-radius: 100px; overflow: hidden; }
+.confBarFill  { height: 100%; border-radius: 100px; transition: width 0.8s var(--ease); }
+
+/* Warning banners */
+.warnBanner {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 12px 14px;
+  background: var(--gold-dim); border: 1px solid rgba(233,196,106,0.25);
+  border-radius: var(--radius-sm);
+  font-size: 0.84rem; color: var(--gold);
+  line-height: 1.5;
+}
+.warnDanger {
+  background: var(--danger-dim); border-color: rgba(231,76,60,0.25); color: var(--danger);
+}
+
+/* Predictions */
+.predictionsBox { }
+.predictToggle {
+  display: flex; align-items: center; gap: 6px;
+  background: none; border: none;
+  font-size: 0.82rem; color: var(--text-muted); cursor: pointer;
+  padding: 4px 0; font-family: var(--font-body);
+  transition: color 0.2s;
+}
+.predictToggle:hover { color: var(--teal-light); }
+.predRow   { display: flex; align-items: center; gap: 10px; padding: 5px 0; }
+.predLabel { font-size: 0.82rem; color: var(--text-secondary); min-width: 160px; }
+.predBarWrap { flex: 1; height: 4px; background: var(--surface-3); border-radius: 100px; overflow: hidden; }
+.predBar   { height: 100%; background: var(--teal); border-radius: 100px; }
+.predScore { font-size: 0.78rem; color: var(--text-muted); min-width: 36px; text-align: right; }
+
+.validRow {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 0.8rem; color: var(--text-muted);
+}
+
+/* History */
+.historyPanel { }
+.histList  { display: flex; flex-direction: column; gap: 10px; }
+.histItem  { padding: 14px 18px; }
+.histTop   { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+.histCond  { font-weight: 600; color: var(--cream); font-size: 0.92rem; }
+.histDate  { font-size: 0.75rem; color: var(--text-muted); }
+.histMeta  { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 0.78rem; color: var(--text-muted); }
+.histConf  { color: var(--teal-light); font-weight: 600; }
+.histValidated {
+  display: flex; align-items: center; gap: 5px;
+  margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border);
+  font-size: 0.78rem; color: var(--success);
+}
