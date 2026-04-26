@@ -1,0 +1,66 @@
+version: "3.9"
+
+services:
+  # ── PostgreSQL ────────────────────────────────────────────
+  db:
+    image: postgres:16-alpine
+    container_name: skinnovate_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB:       skinnovate_db
+      POSTGRES_USER:     skinnovate_user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U skinnovate_user -d skinnovate_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Flask Backend ─────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: skinnovate_backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      FLASK_ENV:        development
+      DATABASE_URL:     postgresql://skinnovate_user:password@db:5432/skinnovate_db
+      SECRET_KEY:       supersecretkey-change-in-production
+      JWT_SECRET_KEY:   jwtkey-change-in-production
+      UPLOAD_FOLDER:    /app/uploads
+      CORS_ORIGINS:     http://localhost:3000
+    volumes:
+      - ./backend:/app
+      - uploads_data:/app/uploads
+    ports:
+      - "5000:5000"
+    command: >
+      sh -c "flask db upgrade &&
+             python seed.py &&
+             python run.py"
+
+  # ── React Frontend ────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: skinnovate_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_URL=http://localhost:5000
+
+volumes:
+  postgres_data:
+  uploads_data:
