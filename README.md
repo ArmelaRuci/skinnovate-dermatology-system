@@ -3,268 +3,282 @@
 
 # Skinnovate — AI-Powered Dermatology Platform
 
-A full-stack web application for a dermatology clinic featuring AI-powered skin analysis, doctor validation, appointment management, and electronic health records.
-
+Skinnovate is a full-stack web application for a dermatology clinic featuring AI skin analysis, doctor validation, appointment management, and electronic health records.
 ---
 
 ## Tech Stack
 
-| Layer    | Technology                                    |
-|----------|-----------------------------------------------|
-| Frontend | React 18, React Router 6, Vite, CSS Modules   |
-| Backend  | Flask 3, Flask-JWT-Extended, Flask-SQLAlchemy |
-| Database | PostgreSQL 16                                 |
-| AI       | TensorFlow / Keras (with mock fallback)       |
-| Auth     | JWT (access + refresh tokens), bcrypt         |
+| Layer     | Technology                                   |
+|-----------|----------------------------------------------|
+| Frontend  | React 18, React Router 6, Vite, CSS Modules  |
+| Backend   | Flask 3, Flask-JWT-Extended, Flask-SQLAlchemy|
+| Database  | PostgreSQL                                   |
+| AI        | TensorFlow / Keras                           |
+| Auth      | JWT (access + refresh tokens), bcrypt        |
+
+---
+
+## Project Structure
+
+```
+skinnovate/
+├── backend/
+│   ├── app/
+│   │   ├── __init__.py              # App factory
+│   │   ├── config.py                # Dev / Test / Prod configs
+│   │   ├── api/
+│   │   │   └── routes/
+│   │   │       ├── auth.py          # POST /api/auth/register|login|refresh|me
+│   │   │       ├── users.py         # PATCH /api/users/profile
+│   │   │       ├── analysis.py      # POST /api/analysis/upload  GET /history
+│   │   │       ├── appointments.py  # Full CRUD + emergency + availability
+│   │   │       ├── records.py       # EHR, notes, prescriptions
+│   │   │       ├── treatments.py    # Treatment plans + progress timeline
+│   │   │       └── admin.py         # Stats, user management
+│   │   ├── models/
+│   │   │   ├── user.py              # Base user (all roles)
+│   │   │   ├── patient.py           # Patient profile + loyalty
+│   │   │   ├── dermatologist.py     # Doctor profile
+│   │   │   ├── appointment.py       # Full lifecycle state machine
+│   │   │   ├── skin_image.py        # Uploaded images
+│   │   │   ├── ai_diagnosis.py      # AI results + doctor validation
+│   │   │   ├── medical_note.py      # Consultation notes
+│   │   │   ├── treatment.py         # Treatment plans + progress logs
+│   │   │   └── prescription.py      # E-prescriptions
+│   │   ├── services/
+│   │   │   ├── auth_service.py      # JWT + bcrypt logic
+│   │   │   └── ai_service/
+│   │   │       ├── model/
+│   │   │           └── skin_model.keras 
+│   │   │       ├── preprocessor.py  # Image pipeline (resize/normalise)
+│   │   │       └── predictor.py     # Model inference + mock fallback
+│   │   ├── middleware/
+│   │   │   └── jwt_handlers.py      # JWT error handlers + RBAC decorators
+│   │   └── utils/
+│   │       ├── file_utils.py        # Secure file upload helpers
+│   │       └── response.py          # Standardised JSON responses
+│   ├── run.py                       # Entry point
+│   ├── seed.py                      # Demo data seeder
+│   ├── manage.py                    # Flask-Migrate entry
+│   ├── Dockerfile
+│   └── requirements.txt
+│
+├── frontend/
+│   └── src/
+│       ├── App.jsx                  # Router + protected routes
+│       ├── main.jsx                 # ReactDOM entry
+│       ├── context/
+│       │   └── AuthContext.jsx      # JWT + role state
+│       ├── services/
+│       │   └── api.js               # Axios client + domain helpers
+│       ├── styles/
+│       │   └── globals.css          # Design tokens + base styles
+│       ├── components/
+│       │   └── common/
+│       │       ├── Navbar.jsx       # Role-aware navigation
+│       │       ├── DashboardLayout.jsx
+│       │       ├── UI.jsx           # Card, Button, StatCard, FormField…
+│       │       └── Spinner.jsx
+│       └── pages/
+│           ├── public/              # Landing, Login, Register
+│           ├── patient/             # Dashboard, AI Analysis, Appointments,
+│           │                        # Records, Treatments
+│           ├── doctor/              # Dashboard, Queue, Validation, Schedule
+│           └── admin/               # Dashboard, User Management
+│
+├── docker-compose.yml
+└── README.md
+```
+
+---
+
+## Quick Start (Docker — recommended)
+
+```bash
+# 1. Clone / unzip the project
+cd skinnovate
+
+# 2. Start all services
+docker-compose up --build
+
+# Services:
+#   Frontend  →  http://localhost:3000
+#   Backend   →  http://localhost:5000
+#   DB        →  localhost:5432
+```
+
+---
+
+## Quick Start (Manual)
+
+### Backend
+
+```bash
+cd backend
+
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate        # Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Configure environment
+cp .env.example .env
+# Edit .env — set DATABASE_URL, SECRET_KEY, JWT_SECRET_KEY
+
+# Create database (PostgreSQL must be running)
+flask db init
+flask db migrate -m "initial"
+flask db upgrade
+
+# Seed demo users
+python seed.py
+
+# Run dev server
+python run.py
+# → http://localhost:5000
+```
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+# → http://localhost:3000
+```
 
 ---
 
 ## Demo Accounts
 
-| Role          | Email                        | Password     |
-|---------------|------------------------------|--------------|
-| Patient       | patient@skinnovate.com       | Patient1234! |
-| Dermatologist | doctor@skinnovate.com        | Doctor1234!  |
-| Admin         | admin@skinnovate.com         | Admin1234!   |
+| Role          | Email                        | Password       |
+|---------------|------------------------------|----------------|
+| Patient       | patient@skinnovate.com       | Patient1234!   |
+| Dermatologist | doctor@skinnovate.com        | Doctor1234!    |
+| Admin         | admin@skinnovate.com         | Admin1234!     |
 
 ---
 
-## Features
+## API Endpoints
+
+### Auth
+| Method | Endpoint             | Description              |
+|--------|----------------------|--------------------------|
+| POST   | /api/auth/register   | Register new user        |
+| POST   | /api/auth/login      | Login → JWT tokens       |
+| POST   | /api/auth/refresh    | Refresh access token     |
+| GET    | /api/auth/me         | Current user + profile   |
+
+### AI Analysis
+| Method | Endpoint                        | Description                    |
+|--------|---------------------------------|--------------------------------|
+| POST   | /api/analysis/upload            | Upload image + run AI inference|
+| GET    | /api/analysis/history           | Patient's analysis history     |
+| GET    | /api/analysis/:id               | Single diagnosis               |
+| PATCH  | /api/analysis/:id/validate      | Doctor confirms/modifies       |
+
+### Appointments
+| Method | Endpoint                           | Description              |
+|--------|------------------------------------|--------------------------|
+| POST   | /api/appointments/                 | Book appointment         |
+| GET    | /api/appointments/                 | List (role-filtered)     |
+| PATCH  | /api/appointments/:id              | Update / cancel          |
+| GET    | /api/appointments/doctors/available| Available doctors        |
+
+### Records
+| Method | Endpoint                      | Description             |
+|--------|-------------------------------|-------------------------|
+| GET    | /api/records/my               | Patient's own records   |
+| GET    | /api/records/patient/:id      | Full EHR (doctor/admin) |
+| POST   | /api/records/notes            | Add medical note        |
+| POST   | /api/records/prescriptions    | Issue prescription      |
+
+### Treatments
+| Method | Endpoint                          | Description              |
+|--------|-----------------------------------|--------------------------|
+| POST   | /api/treatments/                  | Create treatment plan    |
+| GET    | /api/treatments/my                | Patient's treatments     |
+| PATCH  | /api/treatments/:id               | Update treatment         |
+| POST   | /api/treatments/:id/progress      | Log progress entry       |
+
+### Admin
+| Method | Endpoint                        | Description              |
+|--------|---------------------------------|--------------------------|
+| GET    | /api/admin/stats                | Platform statistics      |
+| GET    | /api/admin/users                | All users (filterable)   |
+| PATCH  | /api/admin/users/:id/toggle     | Activate / deactivate    |
+| GET    | /api/admin/appointments/pending | Pending appointments     |
 
 ---
 
-### Getting Started
-
-#### Feature 1 — User Registration
-
-New users create an account by entering their personal details and selecting their role. Once registered, they are redirected to the appropriate dashboard.
-
-[User Registration]<img width="1066" height="858" alt="image" src="https://github.com/user-attachments/assets/3043c6d1-7ff6-4790-b01c-ed1e8afb7e6f" />
-
----
-
-#### Feature 2 — User Login
-
-Registered users log in with their email and password. The system reads their role from the token and routes them to their correct dashboard automatically.
-
-[User Login]
-<img width="1050" height="859" alt="image" src="https://github.com/user-attachments/assets/7dbc356f-6f07-485d-af69-8be6456f9577" />
-
-
----
-
-### Patient Features
-
-#### Feature 3 — Patient Dashboard
-
-The patient's home screen. Displays a summary of AI analyses, upcoming appointments, active treatments, and loyalty points — all in one view.
-
-[Patient Dashboard]
-<img width="999" height="862" alt="image" src="https://github.com/user-attachments/assets/80b0ce46-f192-45d2-a9d5-fe24227d82b5" />
-
-
----
-
-#### Feature 4 — AI Skin Image Analysis
-
-The patient uploads a photo of the affected skin area. The backend preprocesses the image and runs it through the trained model, returning a predicted condition and confidence score.
-
-![AI Skin Analysis](screenshots/ai-analysis.png)
-
----
-
-#### Feature 5 — Analysis Result
-
-After the image is processed, the result is displayed clearly — showing the predicted skin condition, confidence level, severity rating, and a consultation recommendation if confidence is below the threshold.
-
-![Analysis Result](screenshots/analysis-result.png)
-
----
-
-#### Feature 6 — Analysis History
-
-Patients can browse all their previous AI analyses in one place, with thumbnails, conditions, confidence scores, and current doctor review status.
-
-![Analysis History](screenshots/analysis-history.png)
-
----
-
-#### Feature 7 — Delete Analysis
-
-Patients can remove any previous analysis record from their account if they no longer need it.
-
-![Delete Analysis](screenshots/delete-analysis.png)
-
----
-
-#### Feature 8 — Book an Appointment
-
-Patients can schedule a visit with an available dermatologist. Emergency flagging is supported for urgent cases.
-
-![Appointment Booking](screenshots/book-appointment.png)
-
----
-
-#### Feature 9 — View Appointments
-
-All appointments are listed with date, time, doctor, type, and current status. Patients can filter by status and cancel appointments that have not yet started.
-
-![Patient Appointments](screenshots/patient-appointments.png)
-
----
-
-#### Feature 10 — Health Records
-
-Patients can view their complete medical history — consultation notes written by their dermatologist and e-prescriptions issued through the platform.
-
-![Patient Medical Records](screenshots/patient-records.png)
-
----
-
-#### Feature 11 — Treatment Plans
-
-Patients see all treatment plans created for them, including plan name, type, status, and start date. Active and completed plans are separated by filter.
-
-![Patient Treatments](screenshots/patient-treatments.png)
-
----
-
-#### Feature 12 — Profile Management
-
-Users can update their personal information from within the platform at any time.
-
-![Profile Management](screenshots/profile.png)
-
----
-
-### Doctor Features
-
-#### Feature 13 — Doctor Dashboard
-
-The doctor's command centre. Shows pending AI reviews awaiting validation, today's appointments, total validated cases, and upcoming schedule — all at a glance.
-
-![Doctor Dashboard](screenshots/doctor-dashboard.png)
-
----
-
-#### Feature 14 — Appointment Management
-
-Doctors can view all appointments assigned to them and update appointment details when needed.
-
-![Doctor Appointments](screenshots/doctor-appointments.png)
-
----
-
-#### Feature 15 — Patient Records
-
-Doctors can access a patient's full medical history — previous notes, prescriptions, and diagnoses — to understand their background before a consultation.
-
-![Doctor Patient Records](screenshots/doctor-patient-records.png)
-
----
-
-#### Feature 16 — Create Medical Notes
-
-After a consultation, the doctor writes notes directly into the patient's health record. These are immediately visible to the patient in their Records page.
-
-![Create Medical Note](screenshots/create-note.png)
-
----
-
-#### Feature 17 — Issue Prescriptions
-
-Doctors can issue e-prescriptions linked to a patient's record or active treatment plan.
-
-![Create Prescription](screenshots/create-prescription.png)
-
----
-
-#### Feature 18 — Create Treatment Plan
-
-Doctors create structured treatment plans for patients, specifying condition, treatment type, instructions, and status. The plan appears immediately in the patient's Treatments page.
-
-![Create Treatment Plan](screenshots/create-treatment.png)
-
----
-
-#### Feature 19 — Update Treatment Status
-
-Doctors can mark a treatment as active, completed, or cancelled. Completed or cancelled treatments are removed from the patient's active view accordingly.
-
-![Update Treatment Status](screenshots/update-treatment.png)
-
----
-
-#### Feature 20 — Log Treatment Progress
-
-Doctors add timestamped progress entries to a treatment plan over time, documenting how the patient is responding at each stage.
-
-![Treatment Progress](screenshots/treatment-progress.png)
-
----
-
-#### Feature 21 — Validate AI Diagnosis
-
-The doctor reviews the patient's uploaded image alongside the AI prediction — confidence score, severity, and all four class scores. They can confirm the AI result or override it with a corrected diagnosis, then add a medical note and create a treatment plan from the same screen.
-
-![Doctor AI Validation](screenshots/doctor-ai-validation.png)
-
----
-
-### Admin Features
-
-#### Feature 22 — Admin Dashboard
-
-Admins have a separate dashboard with an overview of platform activity — total users, appointments, analyses, and system health at a glance.
-
-![Admin Dashboard](screenshots/admin-dashboard.png)
-
----
-
-#### Feature 23 — Platform Statistics
-
-Detailed statistics on platform usage: registered users by role, total analyses submitted, appointments by status, and general activity trends.
-
-![Admin Statistics](screenshots/admin-stats.png)
-
----
-
-#### Feature 24 — User Management
-
-Admins can view all registered users, filter by role, and inspect account details.
-
-![User Management](screenshots/admin-users.png)
-
----
-
-#### Feature 25 — Activate / Deactivate Users
-
-Admins can toggle any user account on or off. Deactivated accounts cannot log in until re-enabled.
-
-![Enable Disable Users](screenshots/toggle-user.png)
-
----
-
-#### Feature 26 — Pending Appointment Management
-
-Admins can view all pending appointments across the platform and help manage appointment flow when needed.
-
-![Pending Appointments](screenshots/pending-appointments.png)
-
----
-
-### Platform-Wide
-
-#### Feature 27 — Responsive Interface
-
-The frontend is built with React and Vite. The interface adapts to different screen sizes and works across desktop and mobile browsers.
-
-![Responsive Interface](screenshots/responsive-interface.png)
-
----
-
-#### Feature 28 — Role-Based Access
-
-Patients, doctors, and admins each see a completely different interface with different routes, actions, and data — enforced by JWT claims on every API request.
-
-![Role Based System](screenshots/role-based-system.png)
+## AI Integration
+
+## AI Integration
+
+The AI part of Skinnovate started as a Jupyter Notebook project and was later connected to the Flask backend so it could be used inside the web application.
+In the notebook, we tested different image preprocessing pipelines and compared how they affected the model’s performance. The general workflow was:
+
+```
+Dataset Collection
+↓
+Image Cleaning and Class Organization
+↓
+Preprocessing Pipeline Testing
+- No preprocessing
+- CLAHE only
+- Gaussian + CLAHE
+- Bilateral + CLAHE
+- Unsharp Mask + CLAHE
+↓
+Model Training and Evaluation
+↓
+Best Pipeline Selection
+↓
+Model Export as .keras file
+↓
+Integration with Flask API
+```
+
+The selected preprocessing pipeline was **Unsharp Mask + CLAHE**, because it helped improve image clarity while preserving important skin details.
+The production AI flow is:
+
+```
+Image Upload (multipart/form-data)
+↓
+preprocessor.py
+
+-Open image
+-Convert image to RGB
+-Resize image to 224×224
+-Apply Unsharp Mask for sharpening
+-Apply CLAHE for contrast enhancement
+-Normalize pixel values to [0, 1]
+-Add batch dimension → (1, 224, 224, 3)
+↓
+predictor.py
+-Load the trained .keras model once
+-Send processed image to model.predict()
+-Extract prediction result and confidence score
+-Apply confidence threshold
+-Flag requires_consultation if confidence is low or the condition requires medical attention
+↓
+AIDiagnosis saved to database
+↓
+Doctor Validation
+PATCH /api/analysis/:id/validate
+```
+
+## Disclaimer
+The AI model is used to support skin condition analysis, but it does not replace a real dermatologist. It does not provide professional medical diagnosis or treatment advice. The result is presented with a confidence score and should be treated as an educational/supportive prediction, not as a final medical diagnosis.
+
+## Key Design Decisions
+
+- **App Factory pattern** — `create_app()` enables isolated testing and multiple environments
+- **One blueprint per domain** — auth, analysis, appointments, records, treatments, admin
+- **Role-based access** via `@role_required` decorator — no logic leaks between roles
+- **Standardised responses** — every endpoint returns `{ success, message, data }` or `{ error }`
+- **AI singleton** — model loaded once at startup, not per-request
+- **CSS Modules** — every component has a colocated `.module.css`; zero global conflicts
+- **AuthContext + axios interceptor** — transparent token refresh on 401
