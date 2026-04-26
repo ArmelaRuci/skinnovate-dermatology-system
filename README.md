@@ -235,13 +235,6 @@ AIDiagnosis saved to DB
 Doctor Validation (PATCH /api/analysis/:id/validate)
 ```
 
-**To plug in your real model:**
-1. Copy your `.h5` file to `backend/app/services/ai_service/model/skin_model.h5`
-2. Set `AI_MODEL_PATH` in `.env`
-3. Adjust `CONDITION_LABELS` in `predictor.py` to match your training labels
-
-When no model file exists, a deterministic mock predictor is used automatically (safe for development).
-
 ---
 
 ## Key Design Decisions
