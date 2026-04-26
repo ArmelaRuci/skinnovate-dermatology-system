@@ -1,0 +1,16 @@
+.ring {
+  display: inline-block;
+  border-radius: 50%;
+  border: 3px solid rgba(42,157,143,0.2);
+  border-top-color: var(--teal);
+  animation: spin 0.75s linear infinite;
+  flex-shrink: 0;
+}
+.fullscreen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100%;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
