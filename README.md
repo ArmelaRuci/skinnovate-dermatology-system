@@ -39,7 +39,7 @@ A full-stack web application for a dermatology clinic featuring AI-powered skin 
 
 New users create an account by entering their personal details and selecting their role. Once registered, they are redirected to the appropriate dashboard.
 
-![User Registration](screenshots/register.png) <img width="1066" height="858" alt="image" src="https://github.com/user-attachments/assets/3043c6d1-7ff6-4790-b01c-ed1e8afb7e6f" />
+![User Registration]<img width="1066" height="858" alt="image" src="https://github.com/user-attachments/assets/3043c6d1-7ff6-4790-b01c-ed1e8afb7e6f" />
 
 ---
 
