@@ -1,0 +1,53 @@
+.tabs { display: flex; gap: 6px; margin-bottom: 28px; }
+.tab {
+  padding: 7px 18px; border-radius: 100px;
+  background: var(--surface-2); border: 1px solid var(--border);
+  color: var(--text-muted); font-size: 0.84rem; font-weight: 500;
+  cursor: pointer; font-family: var(--font-body); transition: all 0.2s;
+}
+.tab:hover   { color: var(--cream); border-color: var(--border-light); }
+.tabActive   { background: var(--teal-dim); border-color: var(--teal); color: var(--teal-light); }
+
+.list { display: flex; flex-direction: column; gap: 16px; }
+.treatCard { padding: 22px 26px; }
+
+.treatHead  { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 12px; flex-wrap: wrap; }
+.treatLeft  { }
+.treatTitle { font-size: 1.05rem; font-weight: 600; color: var(--cream); margin-bottom: 4px; }
+.treatType  { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--teal); font-weight: 600; }
+
+.treatRight { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.treatDates { display: flex; align-items: center; gap: 5px; font-size: 0.78rem; color: var(--text-muted); }
+
+.treatDesc { font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 14px; }
+
+.toggleLogs {
+  display: flex; align-items: center; gap: 6px;
+  background: none; border: none;
+  font-size: 0.82rem; color: var(--teal);
+  cursor: pointer; font-family: var(--font-body); padding: 4px 0;
+  transition: color 0.2s;
+}
+.toggleLogs:hover { color: var(--teal-light); }
+
+/* Timeline */
+.timeline { margin-top: 16px; border-top: 1px solid var(--border); padding-top: 16px; }
+.timelineItem {
+  display: flex; gap: 14px;
+  position: relative; padding-bottom: 20px;
+}
+.timelineItem:last-child { padding-bottom: 0; }
+.timelineDot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--teal); flex-shrink: 0;
+  margin-top: 4px;
+  box-shadow: 0 0 0 3px var(--teal-dim);
+}
+.timelineLine {
+  position: absolute; left: 4px; top: 18px;
+  width: 2px; height: calc(100% - 10px);
+  background: var(--border);
+}
+.timelineContent  { flex: 1; }
+.timelineDate     { font-size: 0.78rem; color: var(--teal); font-weight: 600; margin-bottom: 4px; }
+.timelineNote     { font-size: 0.86rem; color: var(--text-secondary); margin: 0; line-height: 1.6; }
