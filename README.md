@@ -1,3 +1,6 @@
+https://armelaruci.github.io/skinnovate-dermatology-system/
+
+
 # Skinnovate — AI-Powered Dermatology Platform
 
 A full-stack web application for a dermatology clinic featuring AI-powered skin analysis, doctor validation, appointment management, and electronic health records.
