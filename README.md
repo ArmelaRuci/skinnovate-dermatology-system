@@ -1,1 +1,263 @@
+# Skinnovate — AI-Powered Dermatology Platform
 
+A full-stack web application for a dermatology clinic featuring AI-powered skin analysis, doctor validation, appointment management, and electronic health records.
+
+---
+
+## Tech Stack
+
+| Layer    | Technology                                    |
+|----------|-----------------------------------------------|
+| Frontend | React 18, React Router 6, Vite, CSS Modules   |
+| Backend  | Flask 3, Flask-JWT-Extended, Flask-SQLAlchemy |
+| Database | PostgreSQL 16                                 |
+| AI       | TensorFlow / Keras (with mock fallback)       |
+| Auth     | JWT (access + refresh tokens), bcrypt         |
+
+---
+
+## Demo Accounts
+
+| Role          | Email                        | Password     |
+|---------------|------------------------------|--------------|
+| Patient       | patient@skinnovate.com       | Patient1234! |
+| Dermatologist | doctor@skinnovate.com        | Doctor1234!  |
+| Admin         | admin@skinnovate.com         | Admin1234!   |
+
+---
+
+## Features
+
+---
+
+### Getting Started
+
+#### Feature 1 — User Registration
+
+New users create an account by entering their personal details and selecting their role. Once registered, they are redirected to the appropriate dashboard.
+
+![User Registration](screenshots/register.png)
+
+---
+
+#### Feature 2 — User Login
+
+Registered users log in with their email and password. The system reads their role from the token and routes them to their correct dashboard automatically.
+
+![User Login](screenshots/login.png)
+
+---
+
+### Patient Features
+
+#### Feature 3 — Patient Dashboard
+
+The patient's home screen. Displays a summary of AI analyses, upcoming appointments, active treatments, and loyalty points — all in one view.
+
+![Patient Dashboard](screenshots/patient-dashboard.png)
+
+---
+
+#### Feature 4 — AI Skin Image Analysis
+
+The patient uploads a photo of the affected skin area. The backend preprocesses the image and runs it through the trained model, returning a predicted condition and confidence score.
+
+![AI Skin Analysis](screenshots/ai-analysis.png)
+
+---
+
+#### Feature 5 — Analysis Result
+
+After the image is processed, the result is displayed clearly — showing the predicted skin condition, confidence level, severity rating, and a consultation recommendation if confidence is below the threshold.
+
+![Analysis Result](screenshots/analysis-result.png)
+
+---
+
+#### Feature 6 — Analysis History
+
+Patients can browse all their previous AI analyses in one place, with thumbnails, conditions, confidence scores, and current doctor review status.
+
+![Analysis History](screenshots/analysis-history.png)
+
+---
+
+#### Feature 7 — Delete Analysis
+
+Patients can remove any previous analysis record from their account if they no longer need it.
+
+![Delete Analysis](screenshots/delete-analysis.png)
+
+---
+
+#### Feature 8 — Book an Appointment
+
+Patients can schedule a visit with an available dermatologist. Emergency flagging is supported for urgent cases.
+
+![Appointment Booking](screenshots/book-appointment.png)
+
+---
+
+#### Feature 9 — View Appointments
+
+All appointments are listed with date, time, doctor, type, and current status. Patients can filter by status and cancel appointments that have not yet started.
+
+![Patient Appointments](screenshots/patient-appointments.png)
+
+---
+
+#### Feature 10 — Health Records
+
+Patients can view their complete medical history — consultation notes written by their dermatologist and e-prescriptions issued through the platform.
+
+![Patient Medical Records](screenshots/patient-records.png)
+
+---
+
+#### Feature 11 — Treatment Plans
+
+Patients see all treatment plans created for them, including plan name, type, status, and start date. Active and completed plans are separated by filter.
+
+![Patient Treatments](screenshots/patient-treatments.png)
+
+---
+
+#### Feature 12 — Profile Management
+
+Users can update their personal information from within the platform at any time.
+
+![Profile Management](screenshots/profile.png)
+
+---
+
+### Doctor Features
+
+#### Feature 13 — Doctor Dashboard
+
+The doctor's command centre. Shows pending AI reviews awaiting validation, today's appointments, total validated cases, and upcoming schedule — all at a glance.
+
+![Doctor Dashboard](screenshots/doctor-dashboard.png)
+
+---
+
+#### Feature 14 — Appointment Management
+
+Doctors can view all appointments assigned to them and update appointment details when needed.
+
+![Doctor Appointments](screenshots/doctor-appointments.png)
+
+---
+
+#### Feature 15 — Patient Records
+
+Doctors can access a patient's full medical history — previous notes, prescriptions, and diagnoses — to understand their background before a consultation.
+
+![Doctor Patient Records](screenshots/doctor-patient-records.png)
+
+---
+
+#### Feature 16 — Create Medical Notes
+
+After a consultation, the doctor writes notes directly into the patient's health record. These are immediately visible to the patient in their Records page.
+
+![Create Medical Note](screenshots/create-note.png)
+
+---
+
+#### Feature 17 — Issue Prescriptions
+
+Doctors can issue e-prescriptions linked to a patient's record or active treatment plan.
+
+![Create Prescription](screenshots/create-prescription.png)
+
+---
+
+#### Feature 18 — Create Treatment Plan
+
+Doctors create structured treatment plans for patients, specifying condition, treatment type, instructions, and status. The plan appears immediately in the patient's Treatments page.
+
+![Create Treatment Plan](screenshots/create-treatment.png)
+
+---
+
+#### Feature 19 — Update Treatment Status
+
+Doctors can mark a treatment as active, completed, or cancelled. Completed or cancelled treatments are removed from the patient's active view accordingly.
+
+![Update Treatment Status](screenshots/update-treatment.png)
+
+---
+
+#### Feature 20 — Log Treatment Progress
+
+Doctors add timestamped progress entries to a treatment plan over time, documenting how the patient is responding at each stage.
+
+![Treatment Progress](screenshots/treatment-progress.png)
+
+---
+
+#### Feature 21 — Validate AI Diagnosis
+
+The doctor reviews the patient's uploaded image alongside the AI prediction — confidence score, severity, and all four class scores. They can confirm the AI result or override it with a corrected diagnosis, then add a medical note and create a treatment plan from the same screen.
+
+![Doctor AI Validation](screenshots/doctor-ai-validation.png)
+
+---
+
+### Admin Features
+
+#### Feature 22 — Admin Dashboard
+
+Admins have a separate dashboard with an overview of platform activity — total users, appointments, analyses, and system health at a glance.
+
+![Admin Dashboard](screenshots/admin-dashboard.png)
+
+---
+
+#### Feature 23 — Platform Statistics
+
+Detailed statistics on platform usage: registered users by role, total analyses submitted, appointments by status, and general activity trends.
+
+![Admin Statistics](screenshots/admin-stats.png)
+
+---
+
+#### Feature 24 — User Management
+
+Admins can view all registered users, filter by role, and inspect account details.
+
+![User Management](screenshots/admin-users.png)
+
+---
+
+#### Feature 25 — Activate / Deactivate Users
+
+Admins can toggle any user account on or off. Deactivated accounts cannot log in until re-enabled.
+
+![Enable Disable Users](screenshots/toggle-user.png)
+
+---
+
+#### Feature 26 — Pending Appointment Management
+
+Admins can view all pending appointments across the platform and help manage appointment flow when needed.
+
+![Pending Appointments](screenshots/pending-appointments.png)
+
+---
+
+### Platform-Wide
+
+#### Feature 27 — Responsive Interface
+
+The frontend is built with React and Vite. The interface adapts to different screen sizes and works across desktop and mobile browsers.
+
+![Responsive Interface](screenshots/responsive-interface.png)
+
+---
+
+#### Feature 28 — Role-Based Access
+
+Patients, doctors, and admins each see a completely different interface with different routes, actions, and data — enforced by JWT claims on every API request.
+
+![Role Based System](screenshots/role-based-system.png)
