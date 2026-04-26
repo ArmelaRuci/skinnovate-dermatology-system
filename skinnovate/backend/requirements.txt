@@ -1,88 +1,19 @@
-"""Seed the database with demo data for development."""
-
-import sys, os
-sys.path.insert(0, os.path.dirname(__file__))
-
-from app import create_app, db, bcrypt
-from app.models.user import User
-from app.models.patient import Patient
-from app.models.dermatologist import Dermatologist
-
-app = create_app("development")
-
-DEMO_USERS = [
-    {
-        "email": "admin@skinnovate.com",
-        "password": "Admin1234!",
-        "full_name": "System Admin",
-        "role": "admin",
-    },
-    {
-        "email": "doctor@skinnovate.com",
-        "password": "Doctor1234!",
-        "full_name": "Dr. Elena Vasquez",
-        "role": "dermatologist",
-        "license_number": "DERM-2024-001",
-        "specialization": "Medical & Cosmetic Dermatology",
-        "bio": "Board-certified dermatologist with 12 years of experience.",
-        "years_experience": 12,
-    },
-    {
-        "email": "patient@skinnovate.com",
-        "password": "Patient1234!",
-        "full_name": "Sara Mitchell",
-        "role": "patient",
-        "skin_type": "combination",
-        "date_of_birth": "1995-06-15",
-        "gender": "female",
-    },
-]
-
-
-def seed():
-    with app.app_context():
-        db.create_all()
-
-        for data in DEMO_USERS:
-            if User.query.filter_by(email=data["email"]).first():
-                print(f"  → {data['email']} already exists, skipping")
-                continue
-
-            pw_hash = bcrypt.generate_password_hash(data["password"]).decode("utf-8")
-            user = User(
-                email=data["email"],
-                password_hash=pw_hash,
-                full_name=data["full_name"],
-                role=data["role"],
-            )
-            db.session.add(user)
-            db.session.flush()
-
-            if data["role"] == "patient":
-                from datetime import date
-                p = Patient(
-                    user_id=user.id,
-                    skin_type=data.get("skin_type"),
-                    gender=data.get("gender"),
-                    date_of_birth=date.fromisoformat(data["date_of_birth"]) if data.get("date_of_birth") else None,
-                )
-                db.session.add(p)
-
-            elif data["role"] == "dermatologist":
-                d = Dermatologist(
-                    user_id=user.id,
-                    license_number=data["license_number"],
-                    specialization=data.get("specialization"),
-                    bio=data.get("bio"),
-                    years_experience=data.get("years_experience"),
-                )
-                db.session.add(d)
-
-            db.session.commit()
-            print(f"  ✓ Created {data['role']}: {data['email']} / {data['password']}")
-
-        print("\nSeed complete.")
-
-
-if __name__ == "__main__":
-    seed()
+Flask==3.0.3
+Flask-SQLAlchemy==3.1.1
+Flask-Migrate==4.0.7
+Flask-JWT-Extended==4.6.0
+Flask-CORS==4.0.1
+Flask-Bcrypt==1.0.1
+psycopg2-binary==2.9.9
+SQLAlchemy==2.0.31
+marshmallow==3.21.3
+python-dotenv==1.0.1
+Pillow==10.4.0
+numpy==1.26.4
+scikit-learn==1.5.1
+tensorflow==2.16.2
+gunicorn==22.0.0
+celery==5.4.0
+redis==5.0.7
+pytest==8.2.2
+pytest-flask==1.3.0
