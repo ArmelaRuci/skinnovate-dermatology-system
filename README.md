@@ -1,5 +1,6 @@
 [View full feature overview](https://armelaruci.github.io/skinnovate-dermatology-system/)
 
+https://armelaruci.github.io/skinnovate-dermatology-system/
 
 # Skinnovate — AI-Powered Dermatology Platform
 
